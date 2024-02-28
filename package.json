@@ -7,8 +7,23 @@
   "author": "Astrolab DAO <contact@astrolab.fi>",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "deploy-tenderly": "yarn hardhat run --network tenderly scripts/deploy.ts",
+    "deploy-gnosis": "yarn hardhat run --network gnosis-mainnet scripts/deploy.ts",
+    "deploy-optimism": "yarn hardhat run --network optimism-mainnet scripts/deploy.ts",
+    "deploy-polygon": "yarn hardhat run --network polygon-mainnet scripts/deploy.ts",
+    "deploy-moonbeam": "yarn hardhat run --network moonbeam-mainnet scripts/deploy.ts",
+    "test-tenderly": "yarn hardhat test --network tenderly test/ERC20MultiTransfer.test.ts --grep 'Fuzzy monochain'"
+  },
   "devDependencies": {
     "@astrolabs/hardhat": "^1.0.91",
-    "@types/node": "^20.11.21"
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
+    "@nomiclabs/hardhat-etherscan": "^3.1.8",
+    "@tenderly/hardhat-tenderly": "^2.2.2",
+    "@types/node": "^20.11.21",
+    "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.3.0",
+    "solady": "^0.0.172"
   }
 }
