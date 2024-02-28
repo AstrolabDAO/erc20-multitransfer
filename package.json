@@ -1,0 +1,14 @@
+{
+  "name": "@astrolabs/erc20-multitransfer",
+  "version": "1.0.0",
+  "description": "Drop-friendly Solady's ERC20 with added multiSend (batch send) and multiTransfer",
+  "main": "index.js",
+  "repository": "https://github.com/AstrolabDAO/erc20-multitransfer",
+  "author": "Astrolab DAO <contact@astrolab.fi>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "@astrolabs/hardhat": "^1.0.91",
+    "@types/node": "^20.11.21"
+  }
+}
