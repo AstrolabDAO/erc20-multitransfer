@@ -1,5 +1,5 @@
 <div align="center">
-  <img border-radius="25px" max-height="250px" src="./banner.jpg" />
+  <img border-radius="25px" max-height="250px" src="./banner.png" />
   <h1>ERC20 MultiTransfer</h1>
   <p>
     <strong>by <a href="https://astrolab.fi">Astrolab<a></strong>
