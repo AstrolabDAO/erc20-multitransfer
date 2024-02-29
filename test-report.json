@@ -1,0 +1,54 @@
+{
+  "stats": {
+    "suites": 2,
+    "tests": 2,
+    "passes": 2,
+    "pending": 0,
+    "failures": 0,
+    "start": "2024-02-29T11:37:07.220Z",
+    "end": "2024-02-29T11:37:11.569Z",
+    "duration": 4349
+  },
+  "tests": [
+    {
+      "title": "Mint 1m tokens to self (deployer)",
+      "fullTitle": "swapper.contract.test Airdrop bombing Mint 1m tokens to self (deployer)",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 778,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "MultiSend to 2 dummies",
+      "fullTitle": "swapper.contract.test Airdrop bombing MultiSend to 2 dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 409,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "Mint 1m tokens to self (deployer)",
+      "fullTitle": "swapper.contract.test Airdrop bombing Mint 1m tokens to self (deployer)",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 778,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "MultiSend to 2 dummies",
+      "fullTitle": "swapper.contract.test Airdrop bombing MultiSend to 2 dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 409,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    }
+  ]
+}

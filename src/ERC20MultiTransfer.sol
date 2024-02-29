@@ -24,16 +24,14 @@ abstract contract ERC20MultiTransfer is ERC20 {
      * @param amounts An array of corresponding amounts to be transferred to each recipient.
      */
     function multiSend(address[] calldata recipients, uint256[] calldata amounts) public virtual {
+
+        // Ensure the recipients and amounts arrays are of equal length
+        require(recipients.length == amounts.length);
+        uint256 recipientsLength = recipients.length;
+
         /// @solidity memory-safe-assembly
         assembly {
             let sender := caller()
-            let recipientsLength := calldataload(recipients.offset)
-            let amountsLength := calldataload(amounts.offset)
-
-            // Ensure recipients and amounts arrays are of equal length
-            if iszero(eq(recipientsLength, amountsLength)) {
-                revert(0, 0)
-            }
 
             // Calculate total amount to be sent
             let totalAmount := 0

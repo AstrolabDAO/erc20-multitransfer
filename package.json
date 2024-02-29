@@ -13,17 +13,23 @@
     "deploy-optimism": "yarn hardhat run --network optimism-mainnet scripts/deploy.ts",
     "deploy-polygon": "yarn hardhat run --network polygon-mainnet scripts/deploy.ts",
     "deploy-moonbeam": "yarn hardhat run --network moonbeam-mainnet scripts/deploy.ts",
-    "test-tenderly": "yarn hardhat test --network tenderly test/ERC20MultiTransfer.test.ts --grep 'Fuzzy monochain'"
+    "test-tenderly": "yarn hardhat test --network tenderly test/ERC20MultiTransfer.test.ts --grep 'Airdrop'"
   },
   "devDependencies": {
     "@astrolabs/hardhat": "^1.0.91",
+    "@ethersproject/experimental": "^5.7.0",
+    "@json2csv/plainjs": "^7.0.6",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
     "@nomiclabs/hardhat-etherscan": "^3.1.8",
     "@tenderly/hardhat-tenderly": "^2.2.2",
+    "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.21",
     "dotenv": "^16.4.5",
     "dotenv-cli": "^7.3.0",
+    "ethers": "^5",
+    "mocha": "^10.3.0",
+    "mocha-multi": "^1.1.7",
     "solady": "^0.0.172"
   }
 }
