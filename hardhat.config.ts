@@ -1,4 +1,3 @@
-// TODO: update to ethers v6+@nomicfoundation once tenderly supports it
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-etherscan";
 
@@ -6,11 +5,11 @@ import { config } from "@astrolabs/hardhat/dist/hardhat.config";
 
 config.solidity!.compilers = [
   {
-    version: "0.8.22",
+    version: "0.8.24",
     settings: {
       optimizer: {
         enabled: true,
-        runs: 1000,
+        runs: 200,
       },
       viaIR: false,
       evmVersion: `paris`

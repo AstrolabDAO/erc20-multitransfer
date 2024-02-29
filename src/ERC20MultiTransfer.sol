@@ -20,43 +20,32 @@ abstract contract ERC20MultiTransfer is ERC20 {
 
     /**
      * @dev Allows the sender to transfer multiple amounts of tokens to multiple recipients.
-     * @param recipients An array of recipient addresses.
-     * @param amounts An array of corresponding amounts to be transferred to each recipient.
+     * @param recipients An array of recipient addresses in memory.
+     * @param amounts A bytes array in memory where each 64-bit segment represents an amount to be transferred to the corresponding recipient.
      */
-    function multiSend(address[] calldata recipients, uint256[] calldata amounts) public virtual {
+    function multiSend(address[] memory recipients, bytes memory amounts) public {
 
-        // Ensure the recipients and amounts arrays are of equal length
-        require(recipients.length == amounts.length);
+        // Ensure that the amounts array has enough data for all recipients (can be up to 24 bits more depending on padding)
+        require(amounts.length > recipients.length * 8);
+
         uint256 recipientsLength = recipients.length;
 
         /// @solidity memory-safe-assembly
         assembly {
             let sender := caller()
-
-            // Calculate total amount to be sent
+            // Initialize totalAmount outside the loop
             let totalAmount := 0
+
+            // Loop to calculate total amount to be sent and update recipients' balances
             for { let i := 0 } lt(i, recipientsLength) { i := add(i, 1) } {
-                let amount := calldataload(add(amounts.offset, add(0x20, mul(i, 0x20))))
+                // Directly load the amount from the amounts array in memory
+                let amount := mload(add(add(amounts, 32), mul(i, 32))) // Use mul(i, 32) because mload expects byte offsets
+
+                // Accumulate the total amount to be sent
                 totalAmount := add(totalAmount, amount)
-            }
 
-            // Calculate sender balance slot and check balance
-            mstore(0x0c, _BALANCE_SLOT_SEED)
-            mstore(0x00, sender)
-            let senderBalanceSlot := keccak256(0x0c, 0x20)
-            let senderBalance := sload(senderBalanceSlot)
-            if lt(senderBalance, totalAmount) {
-                mstore(0x00, 0xf4d678b8) // `InsufficientBalance()`.
-                revert(0x1c, 0x04)
-            }
-
-            // Update sender's balance
-            sstore(senderBalanceSlot, sub(senderBalance, totalAmount))
-
-            // Update recipients' balances
-            for { let i := 0 } lt(i, recipientsLength) { i := add(i, 1) } {
-                let recipient := calldataload(add(recipients.offset, add(0x20, mul(i, 0x20))))
-                let amount := calldataload(add(amounts.offset, add(0x20, mul(i, 0x20))))
+                // Load the recipient from the recipients array
+                let recipient := mload(add(add(recipients, 32), mul(i, 32)))
 
                 // Calculate recipient balance slot
                 mstore(0x0c, _BALANCE_SLOT_SEED)
@@ -67,6 +56,18 @@ abstract contract ERC20MultiTransfer is ERC20 {
                 // Update recipient's balance
                 sstore(recipientBalanceSlot, add(recipientBalance, amount))
             }
+
+            // Calculate sender balance slot and check balance
+            mstore(0x0c, _BALANCE_SLOT_SEED)
+            mstore(0x00, sender)
+            let senderBalanceSlot := keccak256(0x0c, 0x20)
+            let senderBalance := sload(senderBalanceSlot)
+            if lt(senderBalance, totalAmount) {
+                revert(0, 0) // Revert on insufficient balance
+            }
+
+            // Update sender's balance
+            sstore(senderBalanceSlot, sub(senderBalance, totalAmount))
         }
     }
 
@@ -74,33 +75,32 @@ abstract contract ERC20MultiTransfer is ERC20 {
      * @dev Executes multiple transfers of tokens to the specified recipients.
      * This function first updates the balances without emitting events, and then emits a Transfer event for each transfer.
      * @param recipients An array of recipient addresses.
-     * @param amounts An array of corresponding amounts to be transferred.
+     * @param amounts A bytes array where each 64-bit segment represents an amount to be transferred to the corresponding recipient.
      */
-    function multiTransfer(address[] calldata recipients, uint256[] calldata amounts) public virtual {
+    function multiTransfer(address[] calldata recipients, bytes calldata amounts) public virtual {
 
         // First, call multiSend to update balances without emitting events.
         multiSend(recipients, amounts);
+
         /// @solidity memory-safe-assembly
         assembly {
-            // Loop to emit Transfer events for each transfer.
             let length := calldataload(recipients.offset)
             for { let i := 0 } lt(i, length) { i := add(i, 1) } {
                 let recipientOffset := add(recipients.offset, add(0x20, mul(i, 0x20)))
                 let recipient := calldataload(recipientOffset)
-                let amountOffset := add(amounts.offset, add(0x20, mul(i, 0x20)))
-                let amount := calldataload(amountOffset)
+
+                // Adjust to decode each 64-bit amount from the bytes array
+                let amountOffset := add(add(amounts.offset, 32), mul(i, 8)) // Start reading after the 32-byte array length prefix
+                let amount := shr(192, calldataload(amountOffset)) // Right-align the 64-bit amount
 
                 // Emit the Transfer event for each transfer
                 // Setup the event data in memory starting at position 0x00
-                mstore(0x00, _TRANSFER_EVENT_SIGNATURE) // Event Signature
-                mstore(0x20, caller()) // Topic 1: from address
-                mstore(0x40, recipient) // Topic 2: to address
-                mstore(0x60, amount) // Data: value
+                mstore(0x00, caller())      // Topic 1: from address
+                mstore(0x20, recipient)     // Topic 2: to address
+                mstore(0x40, amount)        // Data: value
 
-                // log3(start position of data, size of data, topic1, topic2, topic3)
-                // Since we're logging one word (32 bytes) of data (the amount),
-                // and two topics (from and to addresses), the data starts at 0x60 and is 0x20 bytes long.
-                log3(0x00, 0x60, _TRANSFER_EVENT_SIGNATURE, caller(), recipient)
+                // log3 to emit the event with 3 topics (including the signature) and data
+                log3(0x00, 0x60, shl(224, 0xddf252ad), caller(), recipient) // The Transfer event signature hash
             }
         }
     }
