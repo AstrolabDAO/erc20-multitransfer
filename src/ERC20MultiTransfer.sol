@@ -1,11 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import { ERC20 } from "./ERC20.sol";
+import { ERC20 } from "solady/src/tokens/ERC20.sol";
 
 /// @title ERC20MultiTransfer
 /// @author AstrolabDAO (https://github.com/AstrolabDAO/erc20-multitransfer/blob/main/src/ERC20MultiTransfer.sol)
 abstract contract ERC20MultiTransfer is ERC20 {
+
+    // redefinition of solady's private constants (should be internal for proper use)
+    uint256 private constant _BALANCE_SLOT_SEED = 0x87a211a2;
+
+    /// @dev `keccak256(bytes("Transfer(address,address,uint256)"))`.
+    uint256 internal constant _TRANSFER_EVENT_SIGNATURE =
+        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef;
 
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
     /*                     ADDON: MULTITRANSFER                   */
