@@ -6,6 +6,7 @@ import { Ownable } from "solady/src/auth/Ownable.sol";
 
 /// @title ERC20MultiTransferOwnable
 /// @author AstrolabDAO (https://github.com/AstrolabDAO/erc20-multitransfer/blob/main/src/ERC20MultiTransfer.sol)
+/// @author Solady (https://github.com/Vectorized/solady/blob/main/src/tokens/ERC20.sol)
 contract ERC20MultiTransferOwnable is ERC20MultiTransfer, Ownable {
 
     /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/

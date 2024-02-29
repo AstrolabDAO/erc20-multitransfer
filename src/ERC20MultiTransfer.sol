@@ -5,6 +5,7 @@ import { ERC20 } from "solady/src/tokens/ERC20.sol";
 
 /// @title ERC20MultiTransfer
 /// @author AstrolabDAO (https://github.com/AstrolabDAO/erc20-multitransfer/blob/main/src/ERC20MultiTransfer.sol)
+/// @author Solady (https://github.com/Vectorized/solady/blob/main/src/tokens/ERC20.sol)
 abstract contract ERC20MultiTransfer is ERC20 {
 
     // redefinition of solady's private constants (should be internal for proper use)

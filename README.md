@@ -12,4 +12,92 @@
   </p>
 </div>
 
-Drop-friendly Solady's ERC20 with added `multiSend` (batch send) and `multiTransfer`
+---
+
+# Overview
+
+`ERC20MultiTransfer` is a highly efficient, batch-transferrable ERC20 implementation designed for mass distribution.
+1k+ transfers can fit in a single `multiSend` transaction on most EVMs.
+
+Perfect use cases for this `MultiTransfer` are:
+- Common airdrops
+- Non-transferrable points distribution
+- Reward distribution
+
+`MultiTransfer` extends [Solady's optimized ERC20](https://github.com/Vectorized/solady/blob/main/src/tokens/ERC20.sol), this token aims to set a new standard for drop cost-efficiency.
+
+## Features
+
+- **High Efficiency**: Up to 10x cheaper than combining OpenZeppelin's ERC20 with multicall/multisend libraries or contracts.
+- **Mass Distribution**: Capable of dropping tokens to 2,000+ addresses at once, with potential for 10,000+ depending on the EVM gas limit.
+- **Event Emission Control**: Offers two modes of operation for transfers - with and without ERC20 `Transfer` event emissions, allowing for significant gas savings.
+
+## Functions
+
+### `multiSend`
+
+Executes multiple token transfers without emitting `Transfer` events, optimizing gas consumption.
+
+```solidity
+function multiSend(address[] memory recipients, bytes memory amounts) external;
+```
+
+### `multiTransfer`
+
+Performs multiple token transfers and emits a `Transfer` event for each transfer, adhering to ERC20 standards.
+
+```solidity
+function multiTransfer(address[] memory recipients, bytes memory amounts) external;
+```
+
+## Typical Gas Costs
+
+| Action                 | Receivers | Gas Cost   |
+|------------------------|-----------|------------|
+| `.multiTransfer()`     | 2         | 60,000     |
+|                        | 10        | 240,000    |
+|                        | 100       | 2,350,000  |
+|                        | 500       | 12,500,000 |
+|                        | 1000      | 16,800,000 |
+|                        | 2000      | 32,000,000 |
+| `.multiSend()`         | 2         | 57,000     |
+|                        | 10        | 220,000    |
+|                        | 100       | 2,150,000  |
+|                        | 500       | 9,800,000  |
+|                        | 1000      | 1,440,000  |
+|                        | 2000      | 28,000,000 |
+
+## Getting Started
+
+### Testing
+
+```bash
+yarn test-hardhat
+```
+
+### Extending ERC20MultiTransfer
+
+Implement your own ERC20 token by extending `ERC20MultiTransfer`:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.4;
+
+import "./ERC20MultiTransfer.sol";
+import "solady/src/auth/Ownable.sol";
+
+/// @title DropFrenCoin
+/// @author Your Name/Team Name
+contract DropFrenCoin is ERC20MultiTransfer, Ownable {
+    constructor(string memory name, string memory symbol, uint8 decimals, address owner) 
+        ERC20MultiTransfer(name, symbol, decimals) 
+        Ownable(owner) 
+    {}
+}
+```
+
+## Disclaimer
+
+This token implementation, while based on Solady's audited ERC20 contract, introduces new functionalities that have not been independently audited. The `multiSend` and `multiTransfer` functions, designed for efficiency, slightly deviate from ERC20 compliance by optionally omitting `Transfer` event emissions. Users and developers are encouraged to conduct thorough testing and security reviews. Contributions and suggestions for improvement are welcome!
+
+---

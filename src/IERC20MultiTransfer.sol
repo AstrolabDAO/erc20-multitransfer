@@ -33,6 +33,6 @@ interface IERC20 {
     ) external;
 
     /* MultiTransfer Addon */
-    function multiSend(address[] calldata recipients, uint256[] calldata amounts) external;
-    function multiTransfer(address[] calldata recipients, uint256[] calldata amounts) external;
+    function multiSend(address[] calldata recipients, bytes calldata amounts) external;
+    function multiTransfer(address[] calldata recipients, bytes calldata amounts) external;
 }
