@@ -10,7 +10,7 @@ import {
 } from "@astrolabs/hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ITestEnv } from "./types";
-import { defaultMultiSend, deployToken, initTestEnv, mint, transfer } from "./flows";
+import { defaultMultiSend, defaultMultiTransfer, deployToken, initTestEnv, mint, transfer } from "./flows";
 
 let env: ITestEnv;
 
@@ -32,7 +32,7 @@ describe("swapper.contract.test", function () {
     }
   });
 
-  describe(`Airdrop bombing`, function () {
+  describe(`MultiSend Airdrop (no events, most optimized)`, function () {
     // beforeEach(async function () { await changeNetwork(networkSlug); });
     it(`Transfer to 1 dummy`, async () => transfer(env, env.dummyAddresses[0], 100));
     it(`MultiSend to 1 dummies`, async () => defaultMultiSend(env, 1, 100));
@@ -46,5 +46,20 @@ describe("swapper.contract.test", function () {
     // it(`MultiSend to 4k dummies`, async () => defaultMultiSend(env, 4000, 100));
     // it(`MultiSend to 5k dummies`, async () => defaultMultiSend(env, 5000, 100));
     // it(`MultiSend to 10k dummies`, async () => defaultMultiSend(env, 10000, 100));
+  });
+
+  describe(`MultiTransfer Airdrop (with events, less optimized)`, function () {
+    it(`Transfer to 1 dummy`, async () => transfer(env, env.dummyAddresses[0], 100));
+    it(`MultiTransfer to 1 dummies`, async () => defaultMultiTransfer(env, 1, 100));
+    it(`MultiTransfer to 2 dummies`, async () => defaultMultiTransfer(env, 2, 100));
+    it(`MultiTransfer to 10 dummies`, async () => defaultMultiTransfer(env, 10, 100));
+    it(`MultiTransfer to 100 dummies`, async () => defaultMultiTransfer(env, 100, 100));
+    it(`MultiTransfer to 500 dummies`, async () => defaultMultiTransfer(env, 500, 500));
+    it(`MultiTransfer to 1k dummies`, async () => defaultMultiTransfer(env, 1000, 100));
+    it(`MultiTransfer to 2k dummies`, async () => defaultMultiTransfer(env, 2000, 100));
+    it(`MultiTransfer to 3k dummies`, async () => defaultMultiTransfer(env, 3000, 100));
+    // it(`MultiTransfer to 4k dummies`, async () => defaultMultiTransfer(env, 4000, 100));
+    // it(`MultiTransfer to 5k dummies`, async () => defaultMultiTransfer(env, 5000, 100));
+    // it(`MultiTransfer to 10k dummies`, async () => defaultMultiTransfer(env, 10000, 100));
   });
 });

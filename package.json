@@ -13,8 +13,8 @@
     "deploy-optimism": "yarn hardhat run --network optimism-mainnet scripts/deploy.ts",
     "deploy-polygon": "yarn hardhat run --network polygon-mainnet scripts/deploy.ts",
     "deploy-moonbeam": "yarn hardhat run --network moonbeam-mainnet scripts/deploy.ts",
-    "test-tenderly": "yarn hardhat test --network tenderly test/ERC20MultiTransfer.test.ts --grep 'Airdrop'",
-    "test-hardhat": "yarn hardhat test --network hardhat test/ERC20MultiTransfer.test.ts --grep 'Airdrop'"
+    "test-tenderly": "yarn hardhat test --network tenderly test/ERC20MultiTransfer.test.ts --grep 'MultiTransfer'",
+    "test-hardhat": "yarn hardhat test --network hardhat test/ERC20MultiTransfer.test.ts --grep 'MultiTransfer'"
   },
   "devDependencies": {
     "@astrolabs/hardhat": "^1.0.91",

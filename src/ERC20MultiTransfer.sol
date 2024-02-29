@@ -22,8 +22,9 @@ abstract contract ERC20MultiTransfer is ERC20 {
      * @dev Allows the sender to transfer multiple amounts of tokens to multiple recipients.
      * @param recipients An array of recipient addresses in memory.
      * @param amounts A bytes array in memory where each 64-bit segment represents an amount to be transferred to the corresponding recipient.
+     * @param eventful A boolean indicating whether to emit Transfer events for each transfer.
      */
-    function multiSend(address[] memory recipients, bytes memory amounts) public {
+    function _multiSend(address[] memory recipients, bytes memory amounts, bool eventful) internal {
 
         // Ensure that the amounts array has enough data for all recipients (can be up to 24 bits more depending on padding)
         require(amounts.length > recipients.length * 8);
@@ -55,6 +56,11 @@ abstract contract ERC20MultiTransfer is ERC20 {
 
                 // Update recipient's balance
                 sstore(recipientBalanceSlot, add(recipientBalance, amount))
+
+                if eventful {
+                    mstore(0x20, amount)
+                    log3(0x20, 0x20, _TRANSFER_EVENT_SIGNATURE, sender, recipient)
+                }
             }
 
             // Calculate sender balance slot and check balance
@@ -77,31 +83,18 @@ abstract contract ERC20MultiTransfer is ERC20 {
      * @param recipients An array of recipient addresses.
      * @param amounts A bytes array where each 64-bit segment represents an amount to be transferred to the corresponding recipient.
      */
-    function multiTransfer(address[] calldata recipients, bytes calldata amounts) public virtual {
+    function multiSend(address[] memory recipients, bytes memory amounts) external {
+        _multiSend(recipients, amounts, false);
+    }
 
+    /**
+     * @dev Executes multiple transfers of tokens to the specified recipients.
+     * This function first updates the balances without emitting events, and then emits a Transfer event for each transfer.
+     * @param recipients An array of recipient addresses.
+     * @param amounts A bytes array where each 64-bit segment represents an amount to be transferred to the corresponding recipient.
+     */
+    function multiTransfer(address[] memory recipients, bytes memory amounts) external {
         // First, call multiSend to update balances without emitting events.
-        multiSend(recipients, amounts);
-
-        /// @solidity memory-safe-assembly
-        assembly {
-            let length := calldataload(recipients.offset)
-            for { let i := 0 } lt(i, length) { i := add(i, 1) } {
-                let recipientOffset := add(recipients.offset, add(0x20, mul(i, 0x20)))
-                let recipient := calldataload(recipientOffset)
-
-                // Adjust to decode each 64-bit amount from the bytes array
-                let amountOffset := add(add(amounts.offset, 32), mul(i, 8)) // Start reading after the 32-byte array length prefix
-                let amount := shr(192, calldataload(amountOffset)) // Right-align the 64-bit amount
-
-                // Emit the Transfer event for each transfer
-                // Setup the event data in memory starting at position 0x00
-                mstore(0x00, caller())      // Topic 1: from address
-                mstore(0x20, recipient)     // Topic 2: to address
-                mstore(0x40, amount)        // Data: value
-
-                // log3 to emit the event with 3 topics (including the signature) and data
-                log3(0x00, 0x60, shl(224, 0xddf252ad), caller(), recipient) // The Transfer event signature hash
-            }
-        }
+        _multiSend(recipients, amounts, true);
     }
 }

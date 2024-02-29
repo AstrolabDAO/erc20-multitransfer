@@ -71,6 +71,14 @@ export async function transfer(env: ITestEnv, to: string, amount: number) {
   assert(senderBalanceAfter.eq(senderBalanceBefore.sub(amount)));
 }
 
+export async function multiTransfer(
+  env: ITestEnv,
+  receivers: string[],
+  amounts: number[]
+) {
+  return multiSend(env, receivers, amounts, true);
+}
+
 export async function defaultMultiSend(
   env: ITestEnv,
   receiverCount: number,
@@ -81,18 +89,28 @@ export async function defaultMultiSend(
   return multiSend(env, receivers, amounts);
 }
 
+export async function defaultMultiTransfer(
+  env: ITestEnv,
+  receiverCount: number,
+  amount: number
+) {
+  const receivers = env.dummyAddresses.slice(0, receiverCount);
+  const amounts = Array(receiverCount).fill(amount);
+  return multiTransfer(env, receivers, amounts);
+}
+
 export async function multiSend(
   env: ITestEnv,
   receivers: string[],
-  amounts: number[]
+  amounts: number[],
+  events = false
 ) {
   const from = env.deployer;
   const senderBalanceBefore = await env.token.balanceOf(from.address);
   const receiverBalancesBefore = await env.multicallProvider.all(receivers.map((r) => env.token.multi.balanceOf(r))) as BigNumber[];
   const encodedAmounts = defaultAbiCoder.encode(new Array(amounts.length).fill('uint64'), amounts);
-  const tx = await env.token
-    .multiSend(receivers, encodedAmounts, { gasLimit: 30e6 })
-    .then((tx) => tx.wait());
+  const fn = (events ? env.token.multiTransfer : env.token.multiSend).bind(env.token);
+  const tx = await fn(receivers, encodedAmounts, { gasLimit: 20e6 }).then((tx) => tx.wait());
   const senderBalanceAfter = await env.token.balanceOf(from.address);
   const receiverBalancesAfter = await env.multicallProvider.all(receivers.map((r) => env.token.multi.balanceOf(r))) as BigNumber[];
   console.log(`
