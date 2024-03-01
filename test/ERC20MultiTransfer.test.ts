@@ -10,7 +10,7 @@ import {
 } from "@astrolabs/hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ITestEnv } from "./types";
-import { defaultMultiSend, defaultMultiTransfer, deployToken, initTestEnv, mint, transfer } from "./flows";
+import { defaultMultiSend, defaultMultiTransfer, defaultSetBalanceSlotsUnsafe, deployToken, initTestEnv, mint, transfer } from "./flows";
 
 let env: ITestEnv;
 
@@ -32,9 +32,23 @@ describe("swapper.contract.test", function () {
     }
   });
 
+  describe(`SetBalanceSlotsUnsafe Airdrop (no events, most optimized)`, function () {
+    // beforeEach(async function () { await changeNetwork(networkSlug); });
+    it(`SetBalanceSlotsUnsafe to 1 dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 1, 100));
+    it(`SetBalanceSlotsUnsafe to 2 dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 2, 100));
+    it(`SetBalanceSlotsUnsafe to 10 dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 10, 100));
+    it(`SetBalanceSlotsUnsafe to 100 dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 100, 100));
+    it(`SetBalanceSlotsUnsafe to 500 dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 500, 500));
+    it(`SetBalanceSlotsUnsafe to 1k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 1000, 100));
+    it(`SetBalanceSlotsUnsafe to 2k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 2000, 100));
+    it(`SetBalanceSlotsUnsafe to 3k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 3000, 100));
+    // it(`SetBalanceSlotsUnsafe to 4k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 4000, 100));
+    // it(`SetBalanceSlotsUnsafe to 5k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 5000, 100));
+    // it(`SetBalanceSlotsUnsafe to 10k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 10000, 100));
+  });
+
   describe(`MultiSend Airdrop (no events, most optimized)`, function () {
     // beforeEach(async function () { await changeNetwork(networkSlug); });
-    it(`Transfer to 1 dummy`, async () => transfer(env, env.dummyAddresses[0], 100));
     it(`MultiSend to 1 dummies`, async () => defaultMultiSend(env, 1, 100));
     it(`MultiSend to 2 dummies`, async () => defaultMultiSend(env, 2, 100));
     it(`MultiSend to 10 dummies`, async () => defaultMultiSend(env, 10, 100));
@@ -49,7 +63,6 @@ describe("swapper.contract.test", function () {
   });
 
   describe(`MultiTransfer Airdrop (with events, less optimized)`, function () {
-    it(`Transfer to 1 dummy`, async () => transfer(env, env.dummyAddresses[0], 100));
     it(`MultiTransfer to 1 dummies`, async () => defaultMultiTransfer(env, 1, 100));
     it(`MultiTransfer to 2 dummies`, async () => defaultMultiTransfer(env, 2, 100));
     it(`MultiTransfer to 10 dummies`, async () => defaultMultiTransfer(env, 10, 100));

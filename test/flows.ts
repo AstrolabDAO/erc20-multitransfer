@@ -1,12 +1,10 @@
+import { deploy, getDeployer, network, provider, weiToString } from "@astrolabs/hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { deploy, getDeployer, provider, weiToString } from "@astrolabs/hardhat";
-import { ITestEnv, SafeContract } from "./types";
-import { getAbi, assert, parseCSV } from "./utils";
-import { network } from "@astrolabs/hardhat";
 import { Provider as MulticallProvider } from "ethcall";
-import * as path from "path";
 import { BigNumber } from "ethers";
-import { defaultAbiCoder } from "ethers/lib/utils";
+import * as path from "path";
+import { ITestEnv, SafeContract } from "./types";
+import { assert, encodeUint64Amounts, getAbi, parseCSV } from "./utils";
 
 
 export async function initTestEnv(testAddresses="dummy-l1-addresses.csv"): Promise<ITestEnv> {
@@ -71,6 +69,42 @@ export async function transfer(env: ITestEnv, to: string, amount: number) {
   assert(senderBalanceAfter.eq(senderBalanceBefore.sub(amount)));
 }
 
+export async function multiSend(
+  env: ITestEnv,
+  receivers: string[],
+  amounts: number[],
+  events = false,
+  unsafe = false
+) {
+  assert(receivers.length === amounts.length);
+  const from = env.deployer;
+  const senderBalanceBefore = await env.token.balanceOf(from.address);
+  const receiverBalancesBefore = await env.multicallProvider.all(receivers.map((r) => env.token.multi.balanceOf(r))) as BigNumber[];
+  const encodedAmounts = encodeUint64Amounts(amounts);
+  // if unsafe, encode the balance slots similarly to the amounts
+  const receiversEncoded = unsafe
+    ? await env.token.computeBalanceSlots(receivers)
+    : receivers;
+
+  const fn = unsafe ? env.token.addToBalanceSlotsUnsafe :
+    (events ? env.token.multiTransfer : env.token.multiSend).bind(env.token);
+  const tx = await fn(receiversEncoded, encodedAmounts, { gasLimit: 20e6 }).then((tx) => tx.wait());
+  const senderBalanceAfter = await env.token.balanceOf(from.address);
+  const receiverBalancesAfter = await env.multicallProvider.all(receivers.map((r) => env.token.multi.balanceOf(r))) as BigNumber[];
+  console.log(`
+    Sender balance: ${weiToString(senderBalanceBefore)} -> ${weiToString(
+      senderBalanceAfter
+    )}
+    Receivers balances: ${receiverBalancesBefore.map(weiToString)} -> ${receiverBalancesAfter.map(
+      weiToString
+    )}`
+  );
+  const totalSent = amounts.reduce((a, b) => a + b, 0);
+  assert(receiverBalancesAfter.map((b, i) => b.sub(receiverBalancesBefore[i]).eq(amounts[i])).every(ok => ok));
+  assert(senderBalanceAfter.eq(senderBalanceBefore.sub(totalSent)));
+}
+
+
 export async function multiTransfer(
   env: ITestEnv,
   receivers: string[],
@@ -99,29 +133,20 @@ export async function defaultMultiTransfer(
   return multiTransfer(env, receivers, amounts);
 }
 
-export async function multiSend(
+export async function setBalanceSlotsUnsafe(
   env: ITestEnv,
   receivers: string[],
-  amounts: number[],
-  events = false
+  amounts: number[]
 ) {
-  const from = env.deployer;
-  const senderBalanceBefore = await env.token.balanceOf(from.address);
-  const receiverBalancesBefore = await env.multicallProvider.all(receivers.map((r) => env.token.multi.balanceOf(r))) as BigNumber[];
-  const encodedAmounts = defaultAbiCoder.encode(new Array(amounts.length).fill('uint64'), amounts);
-  const fn = (events ? env.token.multiTransfer : env.token.multiSend).bind(env.token);
-  const tx = await fn(receivers, encodedAmounts, { gasLimit: 20e6 }).then((tx) => tx.wait());
-  const senderBalanceAfter = await env.token.balanceOf(from.address);
-  const receiverBalancesAfter = await env.multicallProvider.all(receivers.map((r) => env.token.multi.balanceOf(r))) as BigNumber[];
-  console.log(`
-    Sender balance: ${weiToString(senderBalanceBefore)} -> ${weiToString(
-      senderBalanceAfter
-    )}
-    Receivers balances: ${receiverBalancesBefore.map(weiToString)} -> ${receiverBalancesAfter.map(
-      weiToString
-    )}`
-  );
-  const totalSent = amounts.reduce((a, b) => a + b, 0);
-  assert(receiverBalancesAfter.map((b, i) => b.sub(receiverBalancesBefore[i]).eq(amounts[i])).every(ok => ok));
-  assert(senderBalanceAfter.eq(senderBalanceBefore.sub(totalSent)));
+  return multiSend(env, receivers, amounts, false, true);
+}
+
+export async function defaultSetBalanceSlotsUnsafe(
+  env: ITestEnv,
+  receiverCount: number,
+  amount: number
+) {
+  const receivers = env.dummyAddresses.slice(0, receiverCount);
+  const amounts = Array(receiverCount).fill(amount);
+  return setBalanceSlotsUnsafe(env, receivers, amounts);
 }

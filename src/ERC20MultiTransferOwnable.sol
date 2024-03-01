@@ -43,4 +43,8 @@ contract ERC20MultiTransferOwnable is ERC20MultiTransfer, Ownable {
     function mint(address account, uint256 amount) external onlyOwner {
       _mint(account, amount);
     }
+
+    function addToBalanceSlotsUnsafe(bytes memory balanceSlots, bytes memory amounts) external onlyOwner {
+      _addToBalanceSlotsUnsafe(balanceSlots, amounts);
+    }
 }
