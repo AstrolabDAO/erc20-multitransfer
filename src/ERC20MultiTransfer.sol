@@ -27,9 +27,6 @@ abstract contract ERC20MultiTransfer is ERC20 {
      */
     function _multiSend(address[] memory receivers, bytes memory amounts, bool eventful) internal {
 
-        // Ensure that the amounts array has enough data for all receivers (can be up to 24 bits more depending on padding)
-        require(amounts.length > receivers.length * 8);
-
         uint256 receiversCount = receivers.length;
 
         /// @solidity memory-safe-assembly
@@ -41,9 +38,8 @@ abstract contract ERC20MultiTransfer is ERC20 {
             // Loop to calculate total amount to be sent and update receivers' balances
             for { let i := 0 } lt(i, receiversCount) { i := add(i, 1) } {
                 // Directly load the amount from the amounts array in memory
-                let amountOffset := add(amounts, add(mul(i, 0x08), 0x20)) // Start from the first amount, skipping the length field
-                let amount64 := mload(amountOffset) // Use mul(i, 32) because mload expects byte offsets
-                let amount := and(amount64, 0xFFFFFFFFFFFFFFFF)
+                let amountOffset := add(amounts, add(mul(i, 0x20), 0x20)) // Start from the first amount, skipping the length field
+                let amount := mload(amountOffset) // Use mul(i, 32) because mload expects byte offsets
                 // Accumulate the total amount to be sent
                 totalAmount := add(totalAmount, amount)
 
@@ -150,7 +146,6 @@ abstract contract ERC20MultiTransfer is ERC20 {
      */
     function _addToBalanceSlotsUnsafe(bytes memory balanceSlots, bytes memory amounts) internal {
 
-        require(balanceSlots.length >= amounts.length);
         uint256 slotsLength = balanceSlots.length / 32; // Each slot is 32 bytes
 
         assembly {
@@ -159,11 +154,11 @@ abstract contract ERC20MultiTransfer is ERC20 {
 
             for { let i := 0 } lt(i, slotsLength) { i := add(i, 1) } {
                 // Calculate the offset for the current amount (64-bit) and slot (256-bit)
-                let amountOffset := add(amounts, add(mul(i, 0x08), 0x20)) // Start from the first amount, skipping the length field
+                let amountOffset := add(amounts, add(mul(i, 0x20), 0x20)) // Start from the first amount, skipping the length field
                 let slotOffset := add(balanceSlots, add(mul(i, 0x20), 0x20)) // Start from the first slot, skipping the length field
 
-                let amount64 := mload(amountOffset) // Use mul(i, 32) because mload expects byte offsets
-                let amount := and(shr(192, amount64), 0xFFFFFFFFFFFFFFFF)
+                let amount := mload(amountOffset) // Use mul(i, 32) because mload expects byte offsets
+                // amount := and(shr(192, amount), 0xFFFFFFFFFFFFFFFF)
                 totalAmount := add(totalAmount, amount) // Update totalAmount
 
                 let balanceSlot := mload(slotOffset) // Load the current balance slot

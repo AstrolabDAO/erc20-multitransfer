@@ -5,13 +5,11 @@ import { artifacts } from 'hardhat';
 
 export const BALANCE_SLOT_SEED = Buffer.from("87a211a2".padEnd(64, "0"), "hex");
 
-// encode the amounts into a hex string with 8 bytes per uint64
-// defaultAbiCoder.encode(new Array(amounts.length).fill('uint64'), amounts)
-export const encodeUint64Amounts = (amounts: number[]) => {
+export const encodeUintAmounts = (amounts: number[], bits=256) => {
   const base = amounts.map(amount =>
-    ethers.utils.hexZeroPad(ethers.utils.hexlify(amount), 8).slice(2)).join('');
-  const left = base.length % 64;
-  return "0x" + (left ? base.padEnd(base.length + 64 - left, '0') : base);
+    ethers.utils.hexZeroPad(ethers.utils.hexlify(amount), bits/8).slice(2)).join('');
+  const left = base.length % bits;
+  return "0x" + (left ? base.padEnd(base.length + bits - left, '0') : base);
 }
 
 export const computeBalanceSlot = (address: string): BigNumber => {

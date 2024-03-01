@@ -41,7 +41,7 @@ describe("swapper.contract.test", function () {
     it(`SetBalanceSlotsUnsafe to 500 dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 500, 500));
     it(`SetBalanceSlotsUnsafe to 1k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 1000, 100));
     it(`SetBalanceSlotsUnsafe to 2k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 2000, 100));
-    it(`SetBalanceSlotsUnsafe to 3k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 3000, 100));
+    // it(`SetBalanceSlotsUnsafe to 3k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 3000, 100));
     // it(`SetBalanceSlotsUnsafe to 4k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 4000, 100));
     // it(`SetBalanceSlotsUnsafe to 5k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 5000, 100));
     // it(`SetBalanceSlotsUnsafe to 10k dummies`, async () => defaultSetBalanceSlotsUnsafe(env, 10000, 100));

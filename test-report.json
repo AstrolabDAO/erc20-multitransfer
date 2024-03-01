@@ -1,0 +1,144 @@
+{
+  "stats": {
+    "suites": 2,
+    "tests": 7,
+    "passes": 7,
+    "pending": 0,
+    "failures": 0,
+    "start": "2024-03-01T16:09:48.714Z",
+    "end": "2024-03-01T16:12:26.906Z",
+    "duration": 158192
+  },
+  "tests": [
+    {
+      "title": "SetBalanceSlotsUnsafe to 1 dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 1 dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 6715,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "SetBalanceSlotsUnsafe to 2 dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 2 dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 7728,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "SetBalanceSlotsUnsafe to 10 dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 10 dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 7143,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "SetBalanceSlotsUnsafe to 100 dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 100 dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 7130,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "SetBalanceSlotsUnsafe to 500 dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 500 dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 17272,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "SetBalanceSlotsUnsafe to 1k dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 1k dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 12523,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "SetBalanceSlotsUnsafe to 2k dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 2k dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 13464,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "SetBalanceSlotsUnsafe to 1 dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 1 dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 6715,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "SetBalanceSlotsUnsafe to 2 dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 2 dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 7728,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "SetBalanceSlotsUnsafe to 10 dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 10 dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 7143,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "SetBalanceSlotsUnsafe to 100 dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 100 dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 7130,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "SetBalanceSlotsUnsafe to 500 dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 500 dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 17272,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "SetBalanceSlotsUnsafe to 1k dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 1k dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 12523,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "SetBalanceSlotsUnsafe to 2k dummies",
+      "fullTitle": "swapper.contract.test SetBalanceSlotsUnsafe Airdrop (no events, most optimized) SetBalanceSlotsUnsafe to 2k dummies",
+      "file": "/Users/derpa/Work/astrolab/ERC20MultiTransfer/test/ERC20MultiTransfer.test.ts",
+      "duration": 13464,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    }
+  ]
+}

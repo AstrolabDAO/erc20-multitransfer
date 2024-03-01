@@ -52,20 +52,20 @@ function multiTransfer(address[] memory recipients, bytes memory amounts) extern
 
 ## Typical Gas Costs
 
-| Action                 | Receivers | Gas Cost   |
-|------------------------|-----------|------------|
-| `.multiTransfer()`     | 2         | 60,000     |
-|                        | 10        | 240,000    |
-|                        | 100       | 2,350,000  |
-|                        | 500       | 12,500,000 |
-|                        | 1000      | 16,800,000 |
-|                        | 2000      | 32,000,000 |
-| `.multiSend()`         | 2         | 57,000     |
-|                        | 10        | 220,000    |
-|                        | 100       | 2,150,000  |
-|                        | 500       | 9,800,000  |
-|                        | 1000      | 1,440,000  |
-|                        | 2000      | 28,000,000 |
+| Action                    | Receivers | Gas Cost   |
+|---------------------------|-----------|------------|
+| `.multiTransfer()`        | 2         | 60,000     |
+|                           | 10        | 240,000    |
+|                           | 100       | 2,350,000  |
+|                           | 500       | 12,500,000 |
+|                           | 1000      | 16,800,000 |
+|                           | 2000      | 32,000,000 |
+| `.multiSend()`            | 2         | 57,000     |
+| `.setBalanceSlotsUnsafe()`| 10        | 220,000    |
+|                           | 100       | 2,150,000  |
+|                           | 500       | 9,800,000  |
+|                           | 1000      | 14,40,000  |
+|                           | 2000      | 28,000,000 |
 
 ## Getting Started
 
@@ -98,6 +98,6 @@ contract DropFrenCoin is ERC20MultiTransfer, Ownable {
 
 ## Disclaimer
 
-This token implementation, while based on Solady's audited ERC20 contract, introduces new functionalities that have not been independently audited. The `multiSend` and `multiTransfer` functions, designed for efficiency, slightly deviate from ERC20 compliance by optionally omitting `Transfer` event emissions. Users and developers are encouraged to conduct thorough testing and security reviews. Contributions and suggestions for improvement are welcome!
+This token, derived from Solady's audited ERC20 contract, adds un-audited features. The multiSend and multiTransfer functions, aimed at efficiency, may not fully comply with ERC20 standards due to possible omission of Transfer event emissions. We urge users and developers to perform extensive testing and security assessments. Feedback and improvements are appreciated!
 
 ---
